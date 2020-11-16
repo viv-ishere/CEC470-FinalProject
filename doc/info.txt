@@ -17,3 +17,4 @@ CACHE
 4096 words
 2, 4, 8, 16, 32-word blocks
 2048, 1024, 512, 256, 128 lines
+12 bit addresses
