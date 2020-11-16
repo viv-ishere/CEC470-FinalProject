@@ -1,6 +1,7 @@
 ﻿  direct_cache.cpp
+C:\Users\TJ\Documents\GitHub\CEC470-FinalProject\direct_cache\direct_cache\direct_cache.cpp(152,9): warning C4244: 'return': conversion from 'double' to 'unsigned int', possible loss of data
   Generating code
-  0 of 15 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  2 of 15 functions (13.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code

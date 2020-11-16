@@ -113,20 +113,43 @@ DirectCache::DirectCache(int number_of_word_bits)
 
 	// Initialize the tag arrays to ensure that we don't accidentally record
 	// a hit if the block has not actually been loaded yet.
-	for (int i = 0; i < number_of_lines_in_cache; i++)
+	for (int i = 0; i < number_of_lines_in_cache; i++) {
 		tags[i] = -1;
+		for (int j = 0; j < number_of_words_in_block; j++) {
+			blocks[i, j] = 0;
+		}
+	}
+
 }
 
-bool DirectCache::requestMemoryAddress(unsigned int address)
-{
+bool DirectCache::requestMemoryAddress(unsigned int address) {
+	bool hit = false;
+	int tag = address & tag_mask; // tag in cache // this should be shifted right by word+line bits
+	int i = address & line_mask; // line in cache // this should be shifted right by word bits
+	int j = address & word_mask; // word in cache
+	
 	number_of_memory_requests++;
-	//do things
-	return false;
+	if (tags[i] != -1) { // if the block has been loaded
+		if (blocks[i, j] != 0) {
+			hit = true;
+			number_of_hits++;
+		} else {
+			blocks[i, j] = 1;
+		}
+	} else { // load the block
+		tags[i] = tag;
+		blocks[i, j] = 1;
+	}
+	//cout << address << "\t" << tag << "\n";
+	cout << address << "\t" << i << "\t" << j << "\t" << tags[i] << "\t" << blocks[i, j] << " \t" << hit << "\n";
+	//cout << number_of_hits << "\t" << number_of_memory_requests << "\n";
+	return hit;
 }
 
-unsigned int DirectCache::getPercentageOfHits(void)
-{
-	return number_of_hits/number_of_memory_requests;
+unsigned int DirectCache::getPercentageOfHits(void) {
+	double percent;
+	percent = number_of_hits * 100 / number_of_memory_requests;
+	return percent;
 }
 
 
@@ -179,9 +202,9 @@ int main(int argc, char* argv[])
 		for (int i = 0; i < powerOfTwo(NUMBER_OF_BITS_IN_ADDRESS); i++)
 			memory[i] = (65535 - i) & EIGHT_BIT_MASK;
 
-		#define SEQ1
+		//#define SEQ1
 		//#define SEQ2
-		//#define SEQ3
+		#define SEQ3
 		//#define SEQ4
 		//#define SEQ5
 
