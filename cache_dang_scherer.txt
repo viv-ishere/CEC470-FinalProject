@@ -1,0 +1,30 @@
+bool DirectCache::requestMemoryAddress(unsigned int address) {
+	bool hit = false;
+	int tag = ((address & tag_mask) >> (int) (log2(number_of_words_in_block)+log2(number_of_lines_in_cache))); // tag in cache
+	int i = ((address & line_mask) >> (int) log2(number_of_words_in_block)); // line in cache
+	int j = address & word_mask; // word in cache
+	
+	number_of_memory_requests++;
+	cout << address << "\t";
+	if (tags[i] != -1) { // if the block has been loaded
+		hit = true;
+		number_of_hits++;
+	} else { // load the block
+		tags[i] = tag;
+		for (int j=0; j<number_of_words_in_block; j++)
+		{
+			blocks[i, j] = memory[address];
+			address++;
+		}
+	}
+	//cout << address << "\t" << tag << "\n";
+	//cout << i << "\t" << j << "\t" << tags[i] << "\t" << blocks[i, j] << " \t" << hit << "\n";
+	//cout << number_of_hits << "\t" << number_of_memory_requests << "\n";
+	return hit;
+}
+
+unsigned int DirectCache::getPercentageOfHits(void) {
+	double percent;
+	percent = number_of_hits * 100 / number_of_memory_requests;
+	return percent;
+}
